@@ -28,24 +28,20 @@ package dev.ludovic.netlib.blas;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.IOException;
-import java.util.Objects;
 import java.util.stream.Stream;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.provider.Arguments;
 
-import dev.ludovic.netlib.BLAS;
-
-public class BLASTest {
+class BLASTest {
 
   final static double depsilon = 1e-11d;
   final static float sepsilon = 1e-3f;
 
   final static BLAS f2j = F2jBLAS.getInstance();
 
+  @SuppressWarnings("unused")
   private static Stream<Arguments> BLASImplementations() throws Throwable {
-    Stream instances = Stream.of(
+    Stream<Arguments> instances = Stream.of(
       Arguments.of(F2jBLAS.getInstance()),
       Arguments.of(JNIBLAS.getInstance())
     );
@@ -69,7 +65,7 @@ public class BLASTest {
     }
     if (major >= 17) {
       instances = Stream.concat(instances, Stream.of(
-        Arguments.of((dev.ludovic.netlib.NativeBLAS)Class.forName("ForeignLinkerBLAS").getMethod("getInstance").invoke(null))
+        Arguments.of((NativeBLAS)Class.forName("ForeignLinkerBLAS").getMethod("getInstance").invoke(null))
       ));
     }
 

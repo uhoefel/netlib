@@ -30,37 +30,37 @@ import java.util.logging.Logger;
 public final class InstanceBuilder {
 
   public static final class BLAS {
-    private static final dev.ludovic.netlib.BLAS instance = getInstanceImpl();
+    private static final dev.ludovic.netlib.blas.BLAS instance = getInstanceImpl();
 
-    public static dev.ludovic.netlib.BLAS getInstance() {
+    public static dev.ludovic.netlib.blas.BLAS getInstance() {
       return instance;
     }
 
-    private static dev.ludovic.netlib.BLAS getInstanceImpl() {
+    private static dev.ludovic.netlib.blas.BLAS getInstanceImpl() {
       try {
-        return dev.ludovic.netlib.NativeBLAS.getInstance();
+        return dev.ludovic.netlib.blas.NativeBLAS.getInstance();
       } catch (Throwable t) {
-        Logger.getLogger(BLAS.class.getName()).warning("Failed to load implementation from:" + dev.ludovic.netlib.NativeBLAS.class.getName());
+        Logger.getLogger(BLAS.class.getName()).warning("Failed to load implementation from:" + dev.ludovic.netlib.blas.NativeBLAS.class.getName());
       }
-      return dev.ludovic.netlib.JavaBLAS.getInstance();
+      return dev.ludovic.netlib.blas.JavaBLAS.getInstance();
     }
   }
 
   public static final class NativeBLAS {
-    private static final dev.ludovic.netlib.NativeBLAS instance = getInstanceImpl();
+    private static final dev.ludovic.netlib.blas.NativeBLAS instance = getInstanceImpl();
 
-    public static dev.ludovic.netlib.NativeBLAS getInstance() {
+    public static dev.ludovic.netlib.blas.NativeBLAS getInstance() {
       return instance;
     }
 
-    private static dev.ludovic.netlib.NativeBLAS getInstanceImpl() {
+    private static dev.ludovic.netlib.blas.NativeBLAS getInstanceImpl() {
       try {
         return dev.ludovic.netlib.blas.JNIBLAS.getInstance();
       } catch (Throwable t) {
         Logger.getLogger(NativeBLAS.class.getName()).warning("Failed to load implementation from:" + dev.ludovic.netlib.blas.JNIBLAS.class.getName());
       }
       try {
-        return (dev.ludovic.netlib.NativeBLAS)Class.forName("dev.ludovic.netlib.blas.ForeignLinkerBLAS").getMethod("getInstance").invoke(null);
+        return (dev.ludovic.netlib.blas.NativeBLAS)Class.forName("dev.ludovic.netlib.blas.ForeignLinkerBLAS").getMethod("getInstance").invoke(null);
       } catch (Throwable t) {
         Logger.getLogger(NativeBLAS.class.getName()).warning("Failed to load implementation from:" + "dev.ludovic.netlib.blas.ForeignLinkerBLAS");
       }
@@ -69,13 +69,13 @@ public final class InstanceBuilder {
   }
 
   public static final class JavaBLAS {
-    private static final dev.ludovic.netlib.JavaBLAS instance = getInstanceImpl();
+    private static final dev.ludovic.netlib.blas.JavaBLAS instance = getInstanceImpl();
 
-    public static dev.ludovic.netlib.JavaBLAS getInstance() {
+    public static dev.ludovic.netlib.blas.JavaBLAS getInstance() {
       return instance;
     }
 
-    private static dev.ludovic.netlib.JavaBLAS getInstanceImpl() {
+    private static dev.ludovic.netlib.blas.JavaBLAS getInstanceImpl() {
       String[] fullVersion = System.getProperty("java.version").split("[+.\\-]+", 2);
       int major = Integer.parseInt(fullVersion[0]);
       if (major >= 16) {

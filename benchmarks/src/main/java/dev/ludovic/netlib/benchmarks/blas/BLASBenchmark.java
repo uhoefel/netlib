@@ -25,9 +25,9 @@
 
 package dev.ludovic.netlib.benchmarks.blas;
 
-import dev.ludovic.netlib.BLAS;
-
 import org.openjdk.jmh.annotations.*;
+
+import dev.ludovic.netlib.blas.BLAS;
 
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
@@ -47,10 +47,10 @@ public abstract class BLASBenchmark {
     public void setupImplementation() {
         switch (implementation) {
         case "java":
-            blas = dev.ludovic.netlib.JavaBLAS.getInstance();
+            blas = dev.ludovic.netlib.blas.JavaBLAS.getInstance();
             break;
         case "native":
-            blas = dev.ludovic.netlib.NativeBLAS.getInstance();
+            blas = dev.ludovic.netlib.blas.NativeBLAS.getInstance();
             break;
         default: throw new IllegalArgumentException("Unknown implementation = " + implementation);
         }

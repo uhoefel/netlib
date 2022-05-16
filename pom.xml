@@ -1,300 +1,341 @@
-<!--
-Copyright 2020, 2021, Ludovic Henry
+<!-- Copyright 2020, 2021, Ludovic Henry Permission is hereby granted, free 
+	of charge, to any person obtaining a copy of this software and associated 
+	documentation files (the "Software"), to deal in the Software without restriction, 
+	including without limitation the rights to use, copy, modify, merge, publish, 
+	distribute, sublicense, and/or sell copies of the Software, and to permit 
+	persons to whom the Software is furnished to do so, subject to the following 
+	conditions: The above copyright notice and this permission notice shall be 
+	included in all copies or substantial portions of the Software. THE SOFTWARE 
+	IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING 
+	BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR 
+	PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS 
+	BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION 
+	OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH 
+	THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. Please contact 
+	git@ludovic.dev or visit ludovic.dev if you need additional information or 
+	have any questions. -->
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
+	<groupId>dev.ludovic.netlib</groupId>
+	<artifactId>parent</artifactId>
+	<version>2-SNAPSHOT</version>
+	<packaging>pom</packaging>
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+	<name>Netlib</name>
+	<description>Implementation of the Netlib APIs in Java using hardware acceleration.</description>
+	<url>http://github.com/luhenry/blas</url>
 
-Please contact git@ludovic.dev or visit ludovic.dev if you need additional
-information or have any questions.
--->
+	<licenses>
+		<license>
+			<name>MIT</name>
+			<url>https://opensource.org/licenses/mit-license.php</url>
+		</license>
+	</licenses>
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+	<developers>
+		<developer>
+			<name>Ludovic Henry</name>
+			<email>git@ludovic.dev</email>
+			<organization>ludovic.dev</organization>
+			<organizationUrl>blog.ludovic.dev</organizationUrl>
+		</developer>
+	</developers>
 
-  <groupId>dev.ludovic.netlib</groupId>
-  <artifactId>parent</artifactId>
-  <version>2-SNAPSHOT</version>
-  <packaging>pom</packaging>
+	<scm>
+		<connection>scm:git:git://github.com/luhenry/netlib.git</connection>
+		<developerConnection>scm:git:ssh://github.com:luhenry/netlib.git</developerConnection>
+		<url>http://github.com/luhenry/netlib/tree/master</url>
+	</scm>
 
-  <name>Netlib</name>
-  <description>Implementation of the Netlib APIs in Java using hardware acceleration.</description>
-  <url>http://github.com/luhenry/blas</url>
+	<modules>
+		<module>blas</module>
+		<module>lapack</module>
+		<module>arpack</module>
+		<module>benchmarks</module>
+	</modules>
 
-  <licenses>
-    <license>
-      <name>MIT</name>
-      <url>https://opensource.org/licenses/mit-license.php</url>
-    </license>
-  </licenses>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<javac.target>11</javac.target>
+		<jvm.modules></jvm.modules>
+		<argLine></argLine>
+	</properties>
 
-  <developers>
-    <developer>
-      <name>Ludovic Henry</name>
-      <email>git@ludovic.dev</email>
-      <organization>ludovic.dev</organization>
-      <organizationUrl>blog.ludovic.dev</organizationUrl>
-    </developer>
-  </developers>
+	<profiles>
+		<profile>
+			<id>jdk16</id>
+			<activation>
+				<jdk>16</jdk>
+			</activation>
+			<properties>
+				<jvm.modules>--add-modules=jdk.incubator.vector</jvm.modules>
+				<argLine>${jvm.modules}</argLine>
+			</properties>
+		</profile>
+		<profile>
+			<id>jdk17</id>
+			<activation>
+				<jdk>17</jdk>
+			</activation>
+			<properties>
+				<jvm.modules>--add-modules=jdk.incubator.vector,jdk.incubator.foreign</jvm.modules>
+				<argLine>${jvm.modules} -Dforeign.restricted=permit</argLine>
+			</properties>
+		</profile>
+	</profiles>
 
-  <scm>
-    <connection>scm:git:git://github.com/luhenry/netlib.git</connection>
-    <developerConnection>scm:git:ssh://github.com:luhenry/netlib.git</developerConnection>
-    <url>http://github.com/luhenry/netlib/tree/master</url>
-  </scm>
+	<build>
+		<plugins>
 
-  <modules>
-    <module>blas</module>
-    <module>lapack</module>
-    <module>arpack</module>
-    <module>benchmarks</module>
-  </modules>
+			<plugin>
+				<groupId>org.moditect</groupId>
+				<artifactId>moditect-maven-plugin</artifactId>
+				<version>1.0.0.RC2</version>
+				<executions>
+					<execution>
+						<id>generate-module-info</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>generate-module-info</goal>
+						</goals>
+						<configuration>
+							<modules>
+								<module>
+									<artifact>
+										<groupId>net.sourceforge.f2j</groupId>
+										<artifactId>arpack_combined_all</artifactId>
+										<version>0.1</version>
+									</artifact>
+									<moduleInfo>
+										<name>arpack.combined.all</name>
+										<exports>
+											!org.j_paine.formatter;
+											org.netlib.blas;
+											org.netlib.util;
+                                            *;
+										</exports>
+										<requires>
+										    *;
+										</requires>
+									</moduleInfo>
+								</module>
+							</modules>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <javac.target>8</javac.target>
-    <jvm.modules></jvm.modules>
-    <argLine></argLine>
-  </properties>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar-no-fork</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>attach-javadocs</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-gpg-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>sign-artifacts</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>sign</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 
-  <profiles>
-    <profile>
-      <id>jdk16</id>
-      <activation>
-        <jdk>16</jdk>
-      </activation>
-      <properties>
-        <jvm.modules>--add-modules=jdk.incubator.vector</jvm.modules>
-        <argLine>${jvm.modules}</argLine>
-      </properties>
-    </profile>
-    <profile>
-      <id>jdk17</id>
-      <activation>
-        <jdk>17</jdk>
-      </activation>
-      <properties>
-        <jvm.modules>--add-modules=jdk.incubator.vector,jdk.incubator.foreign</jvm.modules>
-        <argLine>${jvm.modules} -Dforeign.restricted=permit</argLine>
-      </properties>
-    </profile>
-  </profiles>
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>0.8.6</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>report</id>
+						<phase>test</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<artifactId>maven-clean-plugin</artifactId>
+					<version>2.5</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>3.8.1</version>
+					<configuration>
+						<compilerVersion>${javac.target}</compilerVersion>
+						<source>${javac.target}</source>
+						<target>${javac.target}</target>
+						<compilerArgs>
+							<arg>-h</arg>
+							<arg>${project.build.directory}/include</arg>
+						</compilerArgs>
+					</configuration>
+				</plugin>
+				<plugin>
+					<artifactId>maven-deploy-plugin</artifactId>
+					<version>2.8.1</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-install-plugin</artifactId>
+					<version>2.5.1</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-jar-plugin</artifactId>
+					<version>2.4</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-javadoc-plugin</artifactId>
+					<version>3.2.0</version>
+					<configuration>
+						<additionalJOptions>
+							<additionalJOption>${jvm.modules}</additionalJOption>
+						</additionalJOptions>
+					</configuration>
+				</plugin>
+				<plugin>
+					<artifactId>maven-site-plugin</artifactId>
+					<version>3.3</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-source-plugin</artifactId>
+					<version>3.2.1</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-shade-plugin</artifactId>
+					<version>3.2.4</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>3.0.0-M5</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-gpg-plugin</artifactId>
+					<version>1.5</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-antrun-plugin</artifactId>
+					<version>3.0.0</version>
+					<executions>
+						<execution>
+							<phase>compile</phase>
+							<goals>
+								<goal>run</goal>
+							</goals>
+							<configuration>
+								<target>
+									<exec executable="make"
+										dir="${project.basedir}/src/main/native" failonerror="true">
+										<arg line="INPUTS='jni.c'" />
+										<arg
+											line="OUTPUT='${project.build.directory}/native/Linux-amd64/libnetlib${project.artifactId}jni.so'" />
+										<arg
+											line="OBJDIR='${project.build.directory}/objs/Linux-amd64'" />
+										<arg line="CC='x86_64-linux-gnu-gcc'" />
+										<arg
+											line="CCFLAGS='-c -Werror -Wall -Wextra -Wno-unused-label -O2 -fPIC -I${project.build.directory}/include -I${JAVA_HOME}/include -I${JAVA_HOME}/include/linux'" />
+										<arg line="LD='x86_64-linux-gnu-gcc'" />
+										<arg line="LDFLAGS='-shared'" />
+										<arg line="all" />
+									</exec>
+									<exec executable="make"
+										dir="${project.basedir}/src/main/native" failonerror="true">
+										<arg line="INPUTS='jni.c'" />
+										<arg
+											line="OUTPUT='${project.build.directory}/native/Linux-aarch64/libnetlib${project.artifactId}jni.so'" />
+										<arg
+											line="OBJDIR='${project.build.directory}/objs/Linux-aarch64'" />
+										<arg line="CC='aarch64-linux-gnu-gcc'" />
+										<arg
+											line="CCFLAGS='-c -Werror -Wall -Wextra -Wno-unused-label -O2 -fPIC -I${project.build.directory}/include -I${JAVA_HOME}/include -I${JAVA_HOME}/include/linux'" />
+										<arg line="LD='aarch64-linux-gnu-gcc'" />
+										<arg line="LDFLAGS='-shared'" />
+										<arg line="all" />
+									</exec>
+								</target>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<artifactId>maven-resources-plugin</artifactId>
+					<version>3.2.0</version>
+					<executions>
+						<execution>
+							<id>copy-resources</id>
+							<phase>process-classes</phase>
+							<goals>
+								<goal>copy-resources</goal>
+							</goals>
+							<configuration>
+								<outputDirectory>${project.build.outputDirectory}/resources/native</outputDirectory>
+								<resources>
+									<resource>
+										<directory>${project.build.directory}/native</directory>
+										<filtering>false</filtering>
+									</resource>
+								</resources>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
 
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-source-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>attach-sources</id>
-            <goals>
-              <goal>jar-no-fork</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>attach-javadocs</id>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-gpg-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>sign-artifacts</id>
-            <phase>verify</phase>
-            <goals>
-              <goal>sign</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-
-      <plugin>
-        <groupId>org.jacoco</groupId>
-        <artifactId>jacoco-maven-plugin</artifactId>
-        <version>0.8.6</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>prepare-agent</goal>
-            </goals>
-          </execution>
-          <execution>
-            <id>report</id>
-            <phase>test</phase>
-            <goals>
-              <goal>report</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
-    <pluginManagement>
-      <plugins>
-        <plugin>
-          <artifactId>maven-clean-plugin</artifactId>
-          <version>2.5</version>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.8.1</version>
-          <configuration>
-            <compilerVersion>${javac.target}</compilerVersion>
-            <source>${javac.target}</source>
-            <target>${javac.target}</target>
-            <compilerArgs>
-              <arg>-h</arg><arg>${project.build.directory}/include</arg>
-            </compilerArgs>
-          </configuration>
-        </plugin>
-        <plugin>
-          <artifactId>maven-deploy-plugin</artifactId>
-          <version>2.8.1</version>
-        </plugin>
-        <plugin>
-          <artifactId>maven-install-plugin</artifactId>
-          <version>2.5.1</version>
-        </plugin>
-        <plugin>
-          <artifactId>maven-jar-plugin</artifactId>
-          <version>2.4</version>
-        </plugin>
-        <plugin>
-          <artifactId>maven-javadoc-plugin</artifactId>
-          <version>3.2.0</version>
-          <configuration>
-            <additionalJOptions>
-              <additionalJOption>${jvm.modules}</additionalJOption>
-            </additionalJOptions>
-          </configuration>
-        </plugin>
-        <plugin>
-          <artifactId>maven-site-plugin</artifactId>
-          <version>3.3</version>
-        </plugin>
-        <plugin>
-          <artifactId>maven-source-plugin</artifactId>
-          <version>3.2.1</version>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-shade-plugin</artifactId>
-          <version>3.2.4</version>
-        </plugin>
-        <plugin>
-          <artifactId>maven-surefire-plugin</artifactId>
-          <version>3.0.0-M5</version>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-gpg-plugin</artifactId>
-          <version>1.5</version>
-        </plugin>
-        <plugin>
-          <artifactId>maven-antrun-plugin</artifactId>
-          <version>3.0.0</version>
-          <executions>
-            <execution>
-              <phase>compile</phase>
-              <goals>
-                <goal>run</goal>
-              </goals>
-              <configuration>
-                <target>
-                  <exec executable="make" dir="${project.basedir}/src/main/native" failonerror="true">
-                    <arg line="INPUTS='jni.c'"/>
-                    <arg line="OUTPUT='${project.build.directory}/native/Linux-amd64/libnetlib${project.artifactId}jni.so'"/>
-                    <arg line="OBJDIR='${project.build.directory}/objs/Linux-amd64'"/>
-                    <arg line="CC='x86_64-linux-gnu-gcc'"/>
-                    <arg line="CCFLAGS='-c -Werror -Wall -Wextra -Wno-unused-label -O2 -fPIC -I${project.build.directory}/include -I${JAVA_HOME}/include -I${JAVA_HOME}/include/linux'"/>
-                    <arg line="LD='x86_64-linux-gnu-gcc'"/>
-                    <arg line="LDFLAGS='-shared'"/>
-                    <arg line="all"/>
-                  </exec>
-                  <exec executable="make" dir="${project.basedir}/src/main/native" failonerror="true">
-                    <arg line="INPUTS='jni.c'"/>
-                    <arg line="OUTPUT='${project.build.directory}/native/Linux-aarch64/libnetlib${project.artifactId}jni.so'"/>
-                    <arg line="OBJDIR='${project.build.directory}/objs/Linux-aarch64'"/>
-                    <arg line="CC='aarch64-linux-gnu-gcc'"/>
-                    <arg line="CCFLAGS='-c -Werror -Wall -Wextra -Wno-unused-label -O2 -fPIC -I${project.build.directory}/include -I${JAVA_HOME}/include -I${JAVA_HOME}/include/linux'"/>
-                    <arg line="LD='aarch64-linux-gnu-gcc'"/>
-                    <arg line="LDFLAGS='-shared'"/>
-                    <arg line="all"/>
-                  </exec>
-                </target>
-              </configuration>
-            </execution>
-          </executions>
-        </plugin>
-        <plugin>
-          <artifactId>maven-resources-plugin</artifactId>
-          <version>3.2.0</version>
-          <executions>
-            <execution>
-              <id>copy-resources</id>
-              <phase>process-classes</phase>
-              <goals>
-                <goal>copy-resources</goal>
-              </goals>
-              <configuration>
-                <outputDirectory>${project.build.outputDirectory}/resources/native</outputDirectory>
-                <resources>
-                  <resource>
-                    <directory>${project.build.directory}/native</directory>
-                    <filtering>false</filtering>
-                  </resource>
-                </resources>
-              </configuration>
-            </execution>
-          </executions>
-        </plugin>
-      </plugins>
-    </pluginManagement>
-  </build>
-
-  <distributionManagement>
-    <repository>
-      <id>ossrh</id>
-      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-    </repository>
-    <snapshotRepository>
-      <id>ossrh</id>
-      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-    </snapshotRepository>
-  </distributionManagement>
+	<distributionManagement>
+		<repository>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+		</repository>
+		<snapshotRepository>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository>
+	</distributionManagement>
 </project>

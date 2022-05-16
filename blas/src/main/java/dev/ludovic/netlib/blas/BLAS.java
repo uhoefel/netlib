@@ -23,7 +23,7 @@
  * information or have any questions.
  */
 
-package dev.ludovic.netlib;
+package dev.ludovic.netlib.blas;
 
 public interface BLAS {
 

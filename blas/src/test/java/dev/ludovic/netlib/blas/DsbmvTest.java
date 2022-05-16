@@ -25,18 +25,15 @@
 
 package dev.ludovic.netlib.blas;
 
-import dev.ludovic.netlib.BLAS;
-
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-import static org.junit.jupiter.api.Assertions.*;
 
-public class DsbmvTest extends BLASTest {
+class DsbmvTest extends BLASTest {
 
     @ParameterizedTest
     @MethodSource("BLASImplementations")
     void testSanity(BLAS blas) {
-        org.junit.jupiter.api.Assumptions.assumeTrue(false);
+        Assumptions.assumeTrue(false);
     }
 }

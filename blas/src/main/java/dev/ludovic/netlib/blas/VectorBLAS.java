@@ -30,7 +30,7 @@ import jdk.incubator.vector.FloatVector;
 import jdk.incubator.vector.VectorOperators;
 import jdk.incubator.vector.VectorSpecies;
 
-class VectorBLAS extends Java11BLAS implements dev.ludovic.netlib.JavaBLAS {
+class VectorBLAS extends Java11BLAS implements dev.ludovic.netlib.blas.JavaBLAS {
 
   private static final VectorSpecies<Float>  FMAX = FloatVector.SPECIES_MAX;
   private static final VectorSpecies<Double> DMAX = DoubleVector.SPECIES_MAX;
@@ -39,10 +39,11 @@ class VectorBLAS extends Java11BLAS implements dev.ludovic.netlib.JavaBLAS {
 
   protected VectorBLAS() {}
 
-  public static dev.ludovic.netlib.JavaBLAS getInstance() {
+  public static dev.ludovic.netlib.blas.JavaBLAS getInstance() {
     return instance;
   }
 
+  @Override
   protected double dasumK(int n, double[] x, int offsetx, int incx) {
     if (incx == 1) {
       int i = 0;
@@ -61,6 +62,7 @@ class VectorBLAS extends Java11BLAS implements dev.ludovic.netlib.JavaBLAS {
     }
   }
 
+  @Override
   protected float sasumK(int n, float[] x, int offsetx, int incx) {
     if (incx == 1) {
       int i = 0;
@@ -79,6 +81,7 @@ class VectorBLAS extends Java11BLAS implements dev.ludovic.netlib.JavaBLAS {
     }
   }
 
+  @Override
   protected void daxpyK(int n, double alpha, double[] x, int offsetx, int incx, double[] y, int offsety, int incy) {
     if (incx == 1 && incy == 1) {
       int i = 0;
@@ -97,6 +100,7 @@ class VectorBLAS extends Java11BLAS implements dev.ludovic.netlib.JavaBLAS {
     }
   }
 
+  @Override
   protected void saxpyK(int n, float alpha, float[] x, int offsetx, int incx, float[] y, int offsety, int incy) {
     if (incx == 1 && incy == 1) {
       int i = 0;
@@ -115,6 +119,7 @@ class VectorBLAS extends Java11BLAS implements dev.ludovic.netlib.JavaBLAS {
     }
   }
 
+  @Override
   protected double ddotK(int n, double[] x, int offsetx, int incx, double[] y, int offsety, int incy) {
     if (incx == 1 && incy == 1) {
       int i = 0;
@@ -134,6 +139,7 @@ class VectorBLAS extends Java11BLAS implements dev.ludovic.netlib.JavaBLAS {
     }
   }
 
+  @Override
   protected float sdotK(int n, float[] x, int offsetx, int incx, float[] y, int offsety, int incy) {
     if (incx == 1 && incy == 1) {
       int i = 0;
@@ -153,6 +159,7 @@ class VectorBLAS extends Java11BLAS implements dev.ludovic.netlib.JavaBLAS {
     }
   }
 
+  @Override
   protected void dgepdotTN(int m, int rows, int rowe, int n, int cols, int cole, int k, int is, int ie, double alpha, double[] a, int offseta, int lda, double[] b, int offsetb, int ldb, double beta, double[] c, int offsetc, int ldc) {
     final int Ti = 1;
 
@@ -251,6 +258,7 @@ class VectorBLAS extends Java11BLAS implements dev.ludovic.netlib.JavaBLAS {
     c[offsetc + (row + 2) + (col + 2) * ldc] = Math.fma(alpha, sum22, c[offsetc + (row + 2) + (col + 2) * ldc]);
   }
 
+  @Override
   protected void sgepdotTN(int m, int rows, int rowe, int n, int cols, int cole, int k, int is, int ie, float alpha, float[] a, int offseta, int lda, float[] b, int offsetb, int ldb, float beta, float[] c, int offsetc, int ldc) {
     final int Ti = 1;
 
@@ -349,6 +357,7 @@ class VectorBLAS extends Java11BLAS implements dev.ludovic.netlib.JavaBLAS {
     c[offsetc + (row + 2) + (col + 2) * ldc] = Math.fma(alpha, sum22, c[offsetc + (row + 2) + (col + 2) * ldc]);
   }
 
+  @Override
   protected void dgemvN(int m, int n, double alpha, double[] a, int offseta, int lda, double[] x, int offsetx, int incx, double beta, double[] y, int offsety, int incy) {
     if (incx == 1 && incy == 1) {
       if (beta != 1.0) {
@@ -418,6 +427,7 @@ class VectorBLAS extends Java11BLAS implements dev.ludovic.netlib.JavaBLAS {
     }
   }
 
+  @Override
   protected void dgemvT(int m, int n, double alpha, double[] a, int offseta, int lda, double[] x, int offsetx, int incx, double beta, double[] y, int offsety, int incy) {
     if (incx == 1 && incy == 1) {
       int col = 0;
@@ -490,6 +500,7 @@ class VectorBLAS extends Java11BLAS implements dev.ludovic.netlib.JavaBLAS {
     }
   }
 
+  @Override
   protected void sgemvN(int m, int n, float alpha, float[] a, int offseta, int lda, float[] x, int offsetx, int incx, float beta, float[] y, int offsety, int incy) {
     if (incx == 1 && incy == 1) {
       if (beta != 1.0f) {
@@ -559,6 +570,7 @@ class VectorBLAS extends Java11BLAS implements dev.ludovic.netlib.JavaBLAS {
     }
   }
 
+  @Override
   protected void sgemvT(int m, int n, float alpha, float[] a, int offseta, int lda, float[] x, int offsetx, int incx, float beta, float[] y, int offsety, int incy) {
     if (incx == 1 && incy == 1) {
       int col = 0;
@@ -631,6 +643,7 @@ class VectorBLAS extends Java11BLAS implements dev.ludovic.netlib.JavaBLAS {
     }
   }
 
+  @Override
   protected void dgerK(int m, int n, double alpha, double[] x, int offsetx, int incx, double[] y, int offsety, int incy, double[] a, int offseta, int lda) {
     if (incx == 1 && incy == 1) {
       int col = 0;
@@ -687,6 +700,7 @@ class VectorBLAS extends Java11BLAS implements dev.ludovic.netlib.JavaBLAS {
     }
   }
 
+  @Override
   protected void sgerK(int m, int n, float alpha, float[] x, int offsetx, int incx, float[] y, int offsety, int incy, float[] a, int offseta, int lda) {
     if (incx == 1 && incy == 1) {
       int col = 0;
@@ -743,6 +757,7 @@ class VectorBLAS extends Java11BLAS implements dev.ludovic.netlib.JavaBLAS {
     }
   }
 
+  @Override
   protected double dnrm2K(int n, double[] x, int offsetx, int incx) {
     if (incx == 1) {
       int i = 0;
@@ -762,6 +777,7 @@ class VectorBLAS extends Java11BLAS implements dev.ludovic.netlib.JavaBLAS {
     }
   }
 
+  @Override
   protected float snrm2K(int n, float[] x, int offsetx, int incx) {
     if (incx == 1) {
       int i = 0;
@@ -781,6 +797,7 @@ class VectorBLAS extends Java11BLAS implements dev.ludovic.netlib.JavaBLAS {
     }
   }
 
+  @Override
   protected void drotK(int n, double[] x, int offsetx, int incx, double[] y, int offsety, int incy, double c, double s) {
     if (incx == 1 && incy == 1) {
       int i = 0;
@@ -805,6 +822,7 @@ class VectorBLAS extends Java11BLAS implements dev.ludovic.netlib.JavaBLAS {
     }
   }
 
+  @Override
   protected void srotK(int n, float[] x, int offsetx, int incx, float[] y, int offsety, int incy, float c, float s) {
     if (incx == 1 && incy == 1) {
       int i = 0;
@@ -829,6 +847,7 @@ class VectorBLAS extends Java11BLAS implements dev.ludovic.netlib.JavaBLAS {
     }
   }
 
+  @Override
   protected void dscalK(int n, double alpha, double[] x, int offsetx, int incx) {
     if (incx == 1) {
       int i = 0;
@@ -846,6 +865,7 @@ class VectorBLAS extends Java11BLAS implements dev.ludovic.netlib.JavaBLAS {
     }
   }
 
+  @Override
   protected void sscalK(int n, float alpha, float[] x, int offsetx, int incx) {
     if (incx == 1) {
       int i = 0;
@@ -863,6 +883,7 @@ class VectorBLAS extends Java11BLAS implements dev.ludovic.netlib.JavaBLAS {
     }
   }
 
+  @Override
   protected void dspmvU(int n, double alpha, double[] a, int offseta, double[] x, int offsetx, int incx, double beta, double[] y, int offsety, int incy) {
     if (incx == 1 && incy == 1) {
       int col = 0;
@@ -961,7 +982,7 @@ class VectorBLAS extends Java11BLAS implements dev.ludovic.netlib.JavaBLAS {
     }
   }
 
-
+  @Override
   protected void sspmvU(int n, float alpha, float[] a, int offseta, float[] x, int offsetx, int incx, float beta, float[] y, int offsety, int incy) {
     if (incx == 1 && incy == 1) {
       int col = 0;
@@ -1060,6 +1081,7 @@ class VectorBLAS extends Java11BLAS implements dev.ludovic.netlib.JavaBLAS {
     }
   }
 
+  @Override
   protected void dswapK(int n, double[] x, int offsetx, int incx, double[] y, int offsety, int incy) {
     if (incx == 1 && incy == 1) {
       int i = 0;
@@ -1080,6 +1102,7 @@ class VectorBLAS extends Java11BLAS implements dev.ludovic.netlib.JavaBLAS {
     }
   }
 
+  @Override
   protected void sswapK(int n, float[] x, int offsetx, int incx, float[] y, int offsety, int incy) {
     if (incx == 1 && incy == 1) {
       int i = 0;
@@ -1100,6 +1123,7 @@ class VectorBLAS extends Java11BLAS implements dev.ludovic.netlib.JavaBLAS {
     }
   }
 
+  @Override
   protected void dsymmLU(int m, int n, double alpha, double[] a, int offseta, int lda, double[] b, int offsetb, int ldb, double beta, double[] c, int offsetc, int ldc) {
     // C := alpha*A*B + beta*C
     int col = 0;
@@ -1374,6 +1398,7 @@ class VectorBLAS extends Java11BLAS implements dev.ludovic.netlib.JavaBLAS {
     }
   }
 
+  @Override
   protected void ssymmLU(int m, int n, float alpha, float[] a, int offseta, int lda, float[] b, int offsetb, int ldb, float beta, float[] c, int offsetc, int ldc) {
     // C := alpha*A*B + beta*C
     int col = 0;
@@ -1648,6 +1673,7 @@ class VectorBLAS extends Java11BLAS implements dev.ludovic.netlib.JavaBLAS {
     }
   }
 
+  @Override
   protected void dsymvU(int n, double alpha, double[] a, int offseta, int lda, double[] x, int offsetx, int incx, double beta, double[] y, int offsety, int incy) {
     if (incx == 1 && incy == 1) {
       int col = 0;
@@ -1763,6 +1789,7 @@ class VectorBLAS extends Java11BLAS implements dev.ludovic.netlib.JavaBLAS {
     }
   }
 
+  @Override
   protected void ssymvU(int n, float alpha, float[] a, int offseta, int lda, float[] x, int offsetx, int incx, float beta, float[] y, int offsety, int incy) {
     if (incx == 1 && incy == 1) {
       int col = 0;

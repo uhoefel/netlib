@@ -31,10 +31,11 @@ class Java11BLAS extends Java8BLAS {
 
   protected Java11BLAS() {}
 
-  public static dev.ludovic.netlib.JavaBLAS getInstance() {
+  public static dev.ludovic.netlib.blas.JavaBLAS getInstance() {
     return instance;
   }
 
+  @Override
   protected void daxpyK(int n, double alpha, double[] x, int offsetx, int incx, double[] y, int offsety, int incy) {
     if (incx == 1 && incy == 1) {
       for (int ix = 0, iy = 0; (ix < n) && (iy < n); ix++, iy++) {
@@ -51,6 +52,7 @@ class Java11BLAS extends Java8BLAS {
     }
   }
 
+  @Override
   protected void saxpyK(int n, float alpha, float[] x, int offsetx, int incx, float[] y, int offsety, int incy) {
     if (incx == 1 && incy == 1) {
       for (int ix = 0, iy = 0; (ix < n) && (iy < n); ix++, iy++) {
@@ -67,6 +69,7 @@ class Java11BLAS extends Java8BLAS {
     }
   }
 
+  @Override
   protected double ddotK(int n, double[] x, int offsetx, int incx, double[] y, int offsety, int incy) {
     double sum = 0.0;
     if (incx == 1 && incy == 1) {
@@ -97,6 +100,7 @@ class Java11BLAS extends Java8BLAS {
     return sum;
   }
 
+  @Override
   protected float sdotK(int n, float[] x, int offsetx, int incx, float[] y, int offsety, int incy) {
     float sum = 0.0f;
     if (incx == 1 && incy == 1) {
@@ -127,6 +131,7 @@ class Java11BLAS extends Java8BLAS {
     return sum;
   }
 
+  @Override
   protected float sdsdotK(int n, float sb, float[] x, int offsetx, int incx, float[] y, int offsety, int incy) {
     double sum = sb;
     if (incx == 1 && incy == 1) {
@@ -157,6 +162,7 @@ class Java11BLAS extends Java8BLAS {
     return (float)sum;
   }
 
+  @Override
   protected void dgebpTN(int m, int rows, int rowe, int n, int cols, int cole, int k, int is, int ie, double alpha, double[] a, int offseta, int lda, double[] b, int offsetb, int ldb, double beta, double[] c, int offsetc, int ldc) {
     final int Tcol = 3, Trow = 3;
 
@@ -205,7 +211,7 @@ class Java11BLAS extends Java8BLAS {
         double sum00 = 0.0;
         double sum01 = 0.0;
         double sum02 = 0.0;
-        double sum03 = 0.0;
+//        double sum03 = 0.0;
         for (int i = is; i < ie; i += 1) {
           double a0 = a[offseta + i + (row + 0) * lda];
           double b0 = b[offsetb + i + (col + 0) * ldb];
@@ -280,6 +286,7 @@ class Java11BLAS extends Java8BLAS {
     }
   }
 
+  @Override
   protected void dgepdotTN(int m, int rows, int rowe, int n, int cols, int cole, int k, int is, int ie, double alpha, double[] a, int offseta, int lda, double[] b, int offsetb, int ldb, double beta, double[] c, int offsetc, int ldc) {
     final int Ti = 2;
 
@@ -375,6 +382,7 @@ class Java11BLAS extends Java8BLAS {
     c[offsetc + (row + 2) + (col + 2) * ldc] = Math.fma(alpha, sum22, c[offsetc + (row + 2) + (col + 2) * ldc]);
   }
 
+  @Override
   protected void dgemmNN(int m, int n, int k, double alpha, double[] a, int offseta, int lda, double[] b, int offsetb, int ldb, double beta, double[] c, int offsetc, int ldc) {
     final int Trow = 3, Tcol = 3, Ti = 2;
 
@@ -571,6 +579,7 @@ class Java11BLAS extends Java8BLAS {
     }
   }
 
+  @Override
   protected void dgemmNT(int m, int n, int k, double alpha, double[] a, int offseta, int lda, double[] b, int offsetb, int ldb, double beta, double[] c, int offsetc, int ldc) {
     final int Trow = 3, Tcol = 3, Ti = 2;
     int col = 0;
@@ -766,6 +775,7 @@ class Java11BLAS extends Java8BLAS {
     }
   }
 
+  @Override
   protected void dgemmTN(int m, int n, int k, double alpha, double[] a, int offseta, int lda, double[] b, int offsetb, int ldb, double beta, double[] c, int offsetc, int ldc) {
     final int Trow = 3, Tcol = 3, Ti = 2;
 
@@ -962,6 +972,7 @@ class Java11BLAS extends Java8BLAS {
     }
   }
 
+  @Override
   protected void dgemmTT(int m, int n, int k, double alpha, double[] a, int offseta, int lda, double[] b, int offsetb, int ldb, double beta, double[] c, int offsetc, int ldc) {
     final int Trow = 3, Tcol = 3, Ti = 2;
 
@@ -1158,8 +1169,11 @@ class Java11BLAS extends Java8BLAS {
     }
   }
 
+  @Override
   protected void sgebpTN(int m, int rows, int rowe, int n, int cols, int cole, int k, int is, int ie, float alpha, float[] a, int offseta, int lda, float[] b, int offsetb, int ldb, float beta, float[] c, int offsetc, int ldc) {
-    final int Tcol = 3, Trow = 3, Ti = 2;
+    final int Tcol = 3;
+    final int Trow = 3;
+//    final int Ti = 2;
 
     int col = cols;
     for (; col < loopAlign(cols, cole, Tcol); col += 1) {
@@ -1206,7 +1220,7 @@ class Java11BLAS extends Java8BLAS {
         float sum00 = 0.0f;
         float sum01 = 0.0f;
         float sum02 = 0.0f;
-        float sum03 = 0.0f;
+//        float sum03 = 0.0f;
         for (int i = is; i < ie; i += 1) {
           float a0 = a[offseta + i + (row + 0) * lda];
           float b0 = b[offsetb + i + (col + 0) * ldb];
@@ -1281,6 +1295,7 @@ class Java11BLAS extends Java8BLAS {
     }
   }
 
+  @Override
   protected void sgepdotTN(int m, int rows, int rowe, int n, int cols, int cole, int k, int is, int ie, float alpha, float[] a, int offseta, int lda, float[] b, int offsetb, int ldb, float beta, float[] c, int offsetc, int ldc) {
     final int Ti = 2;
 
@@ -1376,6 +1391,7 @@ class Java11BLAS extends Java8BLAS {
     c[offsetc + (row + 2) + (col + 2) * ldc] = Math.fma(alpha, sum22, c[offsetc + (row + 2) + (col + 2) * ldc]);
   }
 
+  @Override
   protected void sgemmNN(int m, int n, int k, float alpha, float[] a, int offseta, int lda, float[] b, int offsetb, int ldb, float beta, float[] c, int offsetc, int ldc) {
     final int Trow = 3, Tcol = 3, Ti = 2;
 
@@ -1572,6 +1588,7 @@ class Java11BLAS extends Java8BLAS {
     }
   }
 
+  @Override
   protected void sgemmNT(int m, int n, int k, float alpha, float[] a, int offseta, int lda, float[] b, int offsetb, int ldb, float beta, float[] c, int offsetc, int ldc) {
     final int Trow = 3, Tcol = 3, Ti = 2;
     int col = 0;
@@ -1767,6 +1784,7 @@ class Java11BLAS extends Java8BLAS {
     }
   }
 
+  @Override
   protected void sgemmTN(int m, int n, int k, float alpha, float[] a, int offseta, int lda, float[] b, int offsetb, int ldb, float beta, float[] c, int offsetc, int ldc) {
     final int Trow = 3, Tcol = 3, Ti = 2;
 
@@ -1963,6 +1981,7 @@ class Java11BLAS extends Java8BLAS {
     }
   }
 
+  @Override
   protected void sgemmTT(int m, int n, int k, float alpha, float[] a, int offseta, int lda, float[] b, int offsetb, int ldb, float beta, float[] c, int offsetc, int ldc) {
     final int Trow = 3, Tcol = 3, Ti = 2;
 
@@ -2159,6 +2178,7 @@ class Java11BLAS extends Java8BLAS {
     }
   }
 
+  @Override
   protected void dgemvN(int m, int n, double alpha, double[] a, int offseta, int lda, double[] x, int offsetx, int incx, double beta, double[] y, int offsety, int incy) {
     if (beta != 1.0) {
       int row = 0, iy = incy < 0 ? (m - 1) * -incy : 0;
@@ -2193,6 +2213,7 @@ class Java11BLAS extends Java8BLAS {
     }
   }
 
+  @Override
   protected void dgemvT(int m, int n, double alpha, double[] a, int offseta, int lda, double[] x, int offsetx, int incx, double beta, double[] y, int offsety, int incy) {
     int col = 0, iy = incy < 0 ? (n - 1) * -incy : 0;
     for (; col < loopBound(n, 4); col += 4, iy += incy * 4) {
@@ -2234,6 +2255,7 @@ class Java11BLAS extends Java8BLAS {
     }
   }
 
+  @Override
   protected void sgemvN(int m, int n, float alpha, float[] a, int offseta, int lda, float[] x, int offsetx, int incx, float beta, float[] y, int offsety, int incy) {
     // y = beta * y
     for (int row = 0, iy = incy < 0 ? (m - 1) * -incy : 0; row < m; row += 1, iy += incy) {
@@ -2273,6 +2295,7 @@ class Java11BLAS extends Java8BLAS {
     }
   }
 
+  @Override
   protected void sgemvT(int m, int n, float alpha, float[] a, int offseta, int lda, float[] x, int offsetx, int incx, float beta, float[] y, int offsety, int incy) {
     int col = 0, iy = incy < 0 ? (n - 1) * -incy : 0;
     for (; col < loopBound(n, 8); col += 8, iy += incy * 8) {
@@ -2327,6 +2350,7 @@ class Java11BLAS extends Java8BLAS {
     }
   }
 
+  @Override
   protected void dgerK(int m, int n, double alpha, double[] x, int offsetx, int incx, double[] y, int offsety, int incy, double[] a, int offseta, int lda) {
     int col = 0, iy = incy < 0 ? (n - 1) * -incy : 0;
     for (; col < loopBound(n, 4); col += 4, iy += incy * 4) {
@@ -2352,6 +2376,7 @@ class Java11BLAS extends Java8BLAS {
     }
   }
 
+  @Override
   protected void sgerK(int m, int n, float alpha, float[] x, int offsetx, int incx, float[] y, int offsety, int incy, float[] a, int offseta, int lda) {
     int col = 0, iy = incy < 0 ? (n - 1) * -incy : 0;
     for (; col < loopBound(n, 4); col += 4, iy += incy * 4) {
@@ -2377,6 +2402,7 @@ class Java11BLAS extends Java8BLAS {
     }
   }
 
+  @Override
   protected double dnrm2K(int n, double[] x, int offsetx, int incx) {
     int ix = 0;
     double sum0 = 0.0;
@@ -2414,6 +2440,7 @@ class Java11BLAS extends Java8BLAS {
     return Math.sqrt(sum);
   }
 
+  @Override
   protected float snrm2K(int n, float[] x, int offsetx, int incx) {
     int ix = 0;
     float sum0 = 0.0f;
